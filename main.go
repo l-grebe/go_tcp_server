@@ -14,9 +14,8 @@ const (
 )
 
 var (
-	maxRead  = 1100
-	msgStop  = []byte("cmdStop")
-	msgStart = []byte("cmdContinue")
+	maxRead = 1100
+	msgSend = []byte("message...")
 )
 
 func main() {
@@ -47,7 +46,7 @@ func connectionHandler(conn net.Conn) {
 	for {
 		var ibuf []byte = make([]byte, maxRead+1)
 		length, err := conn.Read(ibuf[0:maxRead])
-		ibuf[maxRead] = 0 //to prevent overflow
+		ibuf[maxRead] = 0 //防止overflow
 		switch err {
 		case nil:
 			handleMsg(length, err, ibuf)
@@ -62,7 +61,7 @@ DISCONNECT:
 }
 
 func talktoclients(to net.Conn) {
-	wrote, err := to.Write(msgStart)
+	wrote, err := to.Write(msgSend)
 	checkError(err, "Write: wrote "+string(wrote)+" bytes.")
 }
 
@@ -81,6 +80,6 @@ func handleMsg(length int, err error, msg []byte) {
 //错误检查，
 func checkError(err error, info string) {
 	if err != nil {
-		panic("ERROR: " + info + " " + err.Error()) //terminate
+		panic("ERROR: " + info + " " + err.Error()) //终止程序
 	}
 }
