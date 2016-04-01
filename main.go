@@ -7,6 +7,12 @@ import (
 	"net"
 )
 
+//ip和port常量的定义
+const (
+	serverip   = "localhost"
+	serverport = "54321"
+)
+
 var (
 	maxRead  = 1100
 	msgStop  = []byte("cmdStop")
@@ -14,15 +20,18 @@ var (
 )
 
 func main() {
-	hostAndPort := "localhost:54321"
+	hostAndPort := serverip + ":" + serverport
+	println(hostAndPort)
 	listener := initServer(hostAndPort)
 	for {
 		conn, err := listener.Accept()
 		checkError(err, "Accept: ")
+		//开一个goroutines处理客户端消息，这是golang的特色，实现并发就只go一下就好
 		go connectionHandler(conn)
 	}
 }
 
+//负责tcp服务端的初始化
 func initServer(hostAndPort string) *net.TCPListener {
 	serverAddr, err := net.ResolveTCPAddr("tcp", hostAndPort)
 	checkError(err, "Resolving address:port failed: '"+hostAndPort+"'")
@@ -69,6 +78,7 @@ func handleMsg(length int, err error, msg []byte) {
 	}
 }
 
+//错误检查，
 func checkError(err error, info string) {
 	if err != nil {
 		panic("ERROR: " + info + " " + err.Error()) //terminate
