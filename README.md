@@ -23,3 +23,11 @@ net包中文API：[http://studygolang.com/static/pkgdoc/pkg/net.htm#TCPAddr](htt
 
 * ListenTCP在本地TCP地址laddr上声明并返回一个*TCPListener。
 * net参数必须是"tcp"、"tcp4"、"tcp6"，如果laddr的端口字段为0，函数将选择一个当前可用的端口，可以用Listener的Addr方法获得该端口。
+
+#### func (*TCPListener) Accept
+    func (l *TCPListener) Accept() (Conn, error)
+* Accept用于实现Listener接口的Accept方法；他会等待下一个呼叫，并返回一个该呼叫的Conn接口。
+
+#### func (*IPConn) RemoteAddr
+    func (c *IPConn) RemoteAddr() Addr
+* RemoteAddr返回远端网络地址
